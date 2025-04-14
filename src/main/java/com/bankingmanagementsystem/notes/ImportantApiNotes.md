@@ -17,3 +17,5 @@ mvn clean install
 To Run the Application:
 Start the Spring Boot application by using:
 mvn spring-boot:run
+
+swing ui: terminal cmd => .\run_swing_ui.bat

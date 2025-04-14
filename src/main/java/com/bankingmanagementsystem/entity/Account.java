@@ -6,13 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// Lombok annotations
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 
-// JPA annotations
 @Table(name = "accounts")
 @Entity
 public class Account {
