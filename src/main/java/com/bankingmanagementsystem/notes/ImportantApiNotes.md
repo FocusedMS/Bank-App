@@ -19,3 +19,6 @@ Start the Spring Boot application by using:
 mvn spring-boot:run
 
 swing ui: terminal cmd => .\run_swing_ui.bat
+
+using postman:
+ http://localhost:8080/api/customers

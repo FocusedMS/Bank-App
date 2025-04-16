@@ -26,15 +26,35 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto createAccount(AccountDto accountDto) {
-        if (accountDto.getEmail() != null && accountRepository.existsByEmail(accountDto.getEmail())) {
+        // Validate required fields
+        if (accountDto.getAccountHolderName() == null || accountDto.getAccountHolderName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Account holder name is required");
+        }
+        
+        if (accountDto.getEmail() == null || accountDto.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("Email is required");
+        }
+        
+        if (accountDto.getMobileNumber() == null || accountDto.getMobileNumber().trim().isEmpty()) {
+            throw new IllegalArgumentException("Mobile number is required");
+        }
+        
+        // Validate mobile number format
+        if (!accountDto.getMobileNumber().matches("^[0-9]{10}$")) {
+            throw new IllegalArgumentException("Mobile number must be exactly 10 digits");
+        }
+        
+        // Check for existing email
+        if (accountRepository.existsByEmail(accountDto.getEmail())) {
             throw new AccountAlreadyExistsException("Account with email " + accountDto.getEmail() + " already exists");
         }
         
-        if (accountDto.getMobileNumber() != null && accountRepository.existsByMobileNumber(accountDto.getMobileNumber())) {
+        // Check for existing mobile number
+        if (accountRepository.existsByMobileNumber(accountDto.getMobileNumber())) {
             throw new AccountAlreadyExistsException("Account with mobile number " + accountDto.getMobileNumber() + " already exists");
         }
-        
 
+        // Generate account number
         String accountNumber = accountNumberGenerator.generateAccountNumber();
         
         // Convert DTO to Entity
@@ -82,9 +102,6 @@ public class AccountServiceImpl implements AccountService {
         }
         if (accountDto.getMobileNumber() != null) {
             existingAccount.setMobileNumber(accountDto.getMobileNumber());
-        }
-        if (accountDto.getBalance() != 0) {
-            existingAccount.setBalance(accountDto.getBalance());
         }
 
         Account updatedAccount = accountRepository.save(existingAccount);
